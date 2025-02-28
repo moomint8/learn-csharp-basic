@@ -17,8 +17,9 @@ namespace Calculator
 
         Operators currentOperator = Operators.None;
         Boolean opreatorChangeFlag = false;
-        int firstOperand = 0;
-        int secondOperand = 0;
+        Boolean divideZeroFalg = false;
+        double firstOperand = 0;
+        double secondOperand = 0;
 
         public Form1()
         {
@@ -34,9 +35,8 @@ namespace Calculator
             }
 
             string strNumber = display.Text += number;
-            int intNumber = Int32.Parse(strNumber);
-            display.Text = intNumber.ToString();
-            
+            double doubleNumber = Double.Parse(strNumber);
+            display.Text = doubleNumber.ToString();
         }
 
         private void BtnZero_Click(object sender, EventArgs e)
@@ -91,7 +91,15 @@ namespace Calculator
 
         private void Save_First_Operand()
         {
-            firstOperand = Int32.Parse(display.Text);
+            if(divideZeroFalg)
+            {
+                display.Text = "0";
+                divideZeroFalg = false;
+            }
+
+            display.Text = Solve_LastPoint(display.Text);
+
+            firstOperand = Double.Parse(display.Text);
             opreatorChangeFlag = true;
         }
 
@@ -121,7 +129,8 @@ namespace Calculator
 
         private void BtnResult_Click(object sender, EventArgs e)
         {
-            secondOperand = Int32.Parse(display.Text);
+            display.Text = Solve_LastPoint(display.Text);
+            secondOperand = Double.Parse(display.Text);
 
             switch(currentOperator)
             {
@@ -141,6 +150,7 @@ namespace Calculator
                     if(secondOperand == 0)
                     {
                         display.Text = "0으로 나눌 수 없습니다.";
+                        divideZeroFalg = true;
                         return;
                     }
                     firstOperand /= secondOperand;
@@ -157,6 +167,25 @@ namespace Calculator
             currentOperator = Operators.None;
             display.Text = "0";
             opreatorChangeFlag = false;
+        }
+
+        private void BtnPoint_Click(object sender, EventArgs e)
+        {
+            if(display.Text.Contains("."))  // 이미 소수점이 선언된 경우
+            {
+                return;
+            }
+            display.Text += ".";
+        }
+
+        private string Solve_LastPoint(string number)
+        {
+            if(number.Substring(number.Length - 1, 1).Equals("."))
+            {
+                number += "0";
+            }
+
+            return number;
         }
     }
 }

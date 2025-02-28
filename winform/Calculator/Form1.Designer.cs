@@ -127,6 +127,7 @@
             this.BtnPoint.TabIndex = 14;
             this.BtnPoint.Text = ".";
             this.BtnPoint.UseVisualStyleBackColor = true;
+            this.BtnPoint.Click += new System.EventHandler(this.BtnPoint_Click);
             // 
             // BtnZero
             // 
